@@ -1,79 +1,41 @@
 import { PrismaClient } from "@prisma/client";
-// import axios from "axios";
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const prisma = new PrismaClient();
 
-async function main(): Promise<void> {
+const userData = [
+  {
+    name: 'Alice',
+    email: 'alice@prisma.io'
+  },
+  {
+    name: 'Nilu',
+    email: 'nilu@prisma.io'
+  }
+]
 
-//  await prisma.user.create({
-//   data: {
-//     username: "Emily880",
-//     password: "xd",
-//   }
-//  })
+async function main() : Promise<void> {
+  console.log(`Start seeding ...`)
+  for (const u of userData) {
+    const user = await prisma.user.create({
+      data: u,
+    })
+    console.log(`Created user with id: ${user.id}`)
+  }
 
-  // await prisma.user.create({
-  //   data: {
-  //     username: "emily880",
-  //     password: "1234"
-  //   },
-  // });
-  // const user = await prisma.user.findUnique({
-  //   where: {
-  //     username: "emily880",
-  //   },
-  //   include:{
-  //     contacts: true
-  //   }
-  // });
-  // var contacts = await (await axios.get("https://my.api.mockaroo.com/contact_list.json?key=fceb27d0")).data;
-  // for (let i = 0; i < contacts.length; i++) {
-  //   await prisma.contact.create({
-  //     data: {
-  //       email: contacts[i].email,
-  //       name: contacts[i].name,
-  //       profesion: contacts[i].profesion,
-  //       linkedin: contacts[i].linkedin,
-  //       github: contacts[i].github,
-  //       extra: contacts[i].extra,
-  //       user: {
-  //         connect: {
-  //           id: "ckwhjttti00067t2eg47yo5to"
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
-  // const contacto = await prisma.contact.create({
-  //     data: {
-  //       email: "emily.moraima.cruz@hotmail.com",
-  //       name: "emily",
-  //       profesion: "full stack",
-  //       linkedin: "asdfgtrewdefrtg",
-  //       github: "dfghfgfadfgbfdrfe",
-  //       extra : "dfghtgrfewfrghrfew",
-  //       user: {
-  //         connect: {
-  //           id: user?.id,
-  //         }
-  //       },
-  //     }
-  // })
-  // console.log(user);
-  // console.log(contacto);
-  // eliminar un contacto
-
-  // await prisma.contact.deleteMany({
-  //   where: {
-  //     userId: "ckwb8ti760000yb2eswyugtof",
-  //   },
-  // });
-  // await prisma.user.delete({
-  //   where: {
-  //     username: "emily880",
-  //   },
-  // });
+  console.log(`Seeding finished.`)
 }
+
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
 
 main()
   .then(() => {})
